@@ -15,18 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // 中文星期映射
-  static const List<String> _weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-
-  String _formatCurrentDate() {
-    final now = DateTime.now();
-    final year = now.year;
-    final month = now.month.toString().padLeft(2, '0');
-    final day = now.day.toString().padLeft(2, '0');
-    final weekday = _weekdays[now.weekday - 1]; // weekday 从 1 开始（周一）
-    return '$year-$month-$day $weekday';
-  }
-
   @override
   void initState() {
     super.initState();
@@ -86,30 +74,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.surface,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Theme.of(context).dividerColor,
-                                      width: 1,
-                                    ),
-                                  ),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '每日任务',
-                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: Theme.of(context).colorScheme.primary,
-                                          ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Text(
-                                      _formatCurrentDate(),
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                          ),
-                                    ),
-                                  ],
+                                child: Text(
+                                  '每日任务',
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: Theme.of(context).colorScheme.primary,
+                                      ),
                                 ),
                               ),
                               const Expanded(
@@ -130,12 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.surface,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Theme.of(context).dividerColor,
-                                      width: 1,
-                                    ),
-                                  ),
                                 ),
                                 child: Text(
                                   '阶段任务',
