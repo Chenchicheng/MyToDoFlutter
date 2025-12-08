@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter (开发模式)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--dart-define=FLUTTER_WEB_USE_SKIA=false"
+            ],
+            "flutterMode": "debug",
+            "env": {
+                "FLUTTER_DEBUG": "true"
+            }
+        },
+        {
+            "name": "Flutter (Profile模式)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "cwd": "${workspaceFolder}",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Flutter (Release模式)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "cwd": "${workspaceFolder}",
+            "flutterMode": "release"
+        }
+    ]
+}
+
+
