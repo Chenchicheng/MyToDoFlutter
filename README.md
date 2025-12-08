@@ -1,6 +1,11 @@
 # MyToDo Flutter
 
-基于 Flutter 的个人任务管理应用，从 Electron 版本迁移而来。
+基于 Flutter 的个人任务管理应用。
+
+<img width="1264" height="681" alt="image" src="https://github.com/user-attachments/assets/4a205da1-a7c5-43c2-ae16-081d8a38eecc" />
+
+<img width="1264" height="681" alt="image" src="https://github.com/user-attachments/assets/5066a096-0741-4523-8c23-03c6e524dc7e" />
+
 
 ## 功能特点
 
