@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/config_provider.dart';
 import '../services/ai_service.dart';
 
@@ -31,6 +33,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'endpoint': 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
       'model': 'qwen-turbo',
     },
+  };
+
+  // API Key 创建链接
+  final Map<String, String> _apiKeyUrls = {
+    'openai': 'https://platform.openai.com/account/api-keys',
+    'deepseek': 'https://platform.deepseek.com/api_keys',
+    'qwen': 'https://dashscope.console.aliyun.com/apiKey',
+    'custom': '',
   };
 
   @override
@@ -108,11 +118,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       ];
 
-      await aiService.generateReport(testTodos, 'weekly', '请简单回复"连接成功"即可。');
+      // 添加5秒超时处理
+      await aiService.generateReport(testTodos, 'weekly', '请简单回复"连接成功"即可。')
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: () {
+              throw TimeoutException('连接超时，请检查API配置是否正确或网络连接是否正常');
+            },
+          );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('连接测试成功！API配置正确。')),
+        );
+      }
+    } on TimeoutException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('连接测试失败: ${e.message}')),
         );
       }
     } catch (e) {
@@ -180,20 +203,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             const SizedBox(height: 16),
-            TextFormField(
-              controller: _apiKeyController,
-              decoration: const InputDecoration(
-                labelText: 'API Key',
-                hintText: '输入API密钥',
-                border: OutlineInputBorder(),
-              ),
-              obscureText: true,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return '请输入API Key';
-                }
-                return null;
-              },
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _apiKeyController,
+                    decoration: const InputDecoration(
+                      labelText: 'API Key',
+                      hintText: '输入API密钥',
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return '请输入API Key';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                if (_apiKeyUrls[_selectedProvider] != null && 
+                    _apiKeyUrls[_selectedProvider]!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: TextButton(
+                      onPressed: () async {
+                        final url = _apiKeyUrls[_selectedProvider];
+                        if (url != null && url.isNotEmpty) {
+                          final uri = Uri.parse(url);
+                          if (await canLaunchUrl(uri)) {
+                            await launchUrl(uri, mode: LaunchMode.externalApplication);
+                          } else {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('无法打开链接')),
+                              );
+                            }
+                          }
+                        }
+                      },
+                      child: const Text('去创建'),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 16),
             TextFormField(

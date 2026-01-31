@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider with ChangeNotifier {
-  ThemeMode _themeMode = ThemeMode.light;
+  ThemeMode _themeMode = ThemeMode.system;
 
   ThemeMode get themeMode => _themeMode;
 
@@ -13,12 +13,12 @@ class ThemeProvider with ChangeNotifier {
   Future<void> _loadTheme() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final themeIndex = prefs.getInt('theme_mode') ?? 0;
+      final themeIndex = prefs.getInt('theme_mode') ?? ThemeMode.system.index;
       _themeMode = ThemeMode.values[themeIndex];
       notifyListeners();
     } catch (e) {
       // 如果 SharedPreferences 不可用，使用默认主题
-      _themeMode = ThemeMode.light;
+      _themeMode = ThemeMode.system;
     }
   }
 
@@ -35,10 +35,17 @@ class ThemeProvider with ChangeNotifier {
   }
 
   void toggleTheme() {
-    if (_themeMode == ThemeMode.light) {
-      setThemeMode(ThemeMode.dark);
-    } else {
-      setThemeMode(ThemeMode.light);
+    // 循环切换：跟随系统 -> 亮色 -> 暗色 -> 跟随系统
+    switch (_themeMode) {
+      case ThemeMode.system:
+        setThemeMode(ThemeMode.light);
+        break;
+      case ThemeMode.light:
+        setThemeMode(ThemeMode.dark);
+        break;
+      case ThemeMode.dark:
+        setThemeMode(ThemeMode.system);
+        break;
     }
   }
 }

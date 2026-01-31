@@ -200,7 +200,7 @@ class _SidebarWidgetState extends State<SidebarWidget> {
           } else {
             final index = options.indexOf(option);
             final off = index - 1;
-            label = off < 0 ? '前${-off}周 ($option)' : '后$off周 ($option)';
+            label = off < 0 ? '前${-off}周 ($option)' : '后${off + 1}周 ($option)';
           }
         } else {
           if (option == _getCurrentMonth()) {
@@ -208,7 +208,7 @@ class _SidebarWidgetState extends State<SidebarWidget> {
           } else {
             final index = options.indexOf(option);
             final off = index - 1;
-            label = off < 0 ? '前${-off}月 ($option)' : '后$off月 ($option)';
+            label = off < 0 ? '前${-off}月 ($option)' : '后${off + 1}月 ($option)';
           }
         }
         return PopupMenuItem(value: option, height: 40, child: Text(label, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface)));
@@ -310,7 +310,7 @@ class _SidebarWidgetState extends State<SidebarWidget> {
     final themeProvider = context.watch<ThemeProvider>();
     final todoProvider = context.watch<TodoProvider>();
     final stats = todoProvider.stats;
-    final isDark = themeProvider.themeMode == ThemeMode.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       width: 300,
@@ -356,7 +356,7 @@ class _SidebarWidgetState extends State<SidebarWidget> {
                       GestureDetector(
                         onTap: () => themeProvider.toggleTheme(),
                         child: Container(
-                          width: 60,
+                          width: 90,
                           height: 28,
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -366,28 +366,60 @@ class _SidebarWidgetState extends State<SidebarWidget> {
                           ),
                           child: Stack(
                             children: [
+                              // 背景图标（三个位置）
+                              Positioned(
+                                left: 2,
+                                top: 4,
+                                child: Icon(
+                                  Icons.settings_brightness,
+                                  size: 20,
+                                  color: themeProvider.themeMode == ThemeMode.system
+                                      ? Colors.white
+                                      : Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                                ),
+                              ),
+                              Positioned(
+                                left: 33,
+                                top: 4,
+                                child: Icon(
+                                  Icons.wb_sunny,
+                                  size: 20,
+                                  color: themeProvider.themeMode == ThemeMode.light
+                                      ? Colors.white
+                                      : Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                                ),
+                              ),
+                              Positioned(
+                                left: 64,
+                                top: 4,
+                                child: Icon(
+                                  Icons.nightlight_round,
+                                  size: 20,
+                                  color: themeProvider.themeMode == ThemeMode.dark
+                                      ? Colors.white
+                                      : Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                                ),
+                              ),
+                              // 滑块
                               AnimatedPositioned(
                                 duration: const Duration(milliseconds: 200),
                                 curve: Curves.easeInOut,
-                                left: themeProvider.themeMode == ThemeMode.dark ? 32 : 2,
+                                left: themeProvider.themeMode == ThemeMode.system
+                                    ? 2
+                                    : themeProvider.themeMode == ThemeMode.light
+                                        ? 33
+                                        : 64,
                                 top: 2,
                                 child: Container(
-                                  width: 24,
-                                  height: 20,
+                                  width: 28,
+                                  height: 24,
                                   decoration: BoxDecoration(
-                                    color: themeProvider.themeMode == ThemeMode.dark
-                                        ? Colors.grey[600]
-                                        : Theme.of(context).colorScheme.primary,
+                                    color: themeProvider.themeMode == ThemeMode.system
+                                        ? Theme.of(context).colorScheme.surfaceVariant
+                                        : themeProvider.themeMode == ThemeMode.dark
+                                            ? Theme.of(context).colorScheme.surfaceVariant
+                                            : Theme.of(context).colorScheme.primary,
                                     borderRadius: BorderRadius.circular(2),
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      themeProvider.themeMode == ThemeMode.dark
-                                          ? Icons.nightlight_round
-                                          : Icons.wb_sunny,
-                                      size: 14,
-                                      color: Colors.white,
-                                    ),
                                   ),
                                 ),
                               ),

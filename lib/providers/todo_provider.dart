@@ -97,7 +97,7 @@ class TodoProvider with ChangeNotifier {
         'todos',
         where: 'task_type = ?',
         whereArgs: ['weekly'],
-        orderBy: 'date DESC, created_at DESC',
+        orderBy: 'period DESC, created_at DESC',
         limit: pageSize,
         offset: offset,
       );
@@ -106,7 +106,7 @@ class TodoProvider with ChangeNotifier {
         'todos',
         where: 'task_type = ?',
         whereArgs: ['monthly'],
-        orderBy: 'date DESC, created_at DESC',
+        orderBy: 'period DESC, created_at DESC',
         limit: pageSize,
         offset: offset,
       );

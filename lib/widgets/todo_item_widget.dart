@@ -241,7 +241,7 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
           } else {
             final index = options.indexOf(option);
             final off = index - 1;
-            label = off < 0 ? '前${-off}周 ($option)' : '后$off周 ($option)';
+            label = off < 0 ? '前${-off}周 ($option)' : '后${off + 1}周 ($option)';
           }
         } else {
           if (option == _getCurrentMonth()) {
@@ -249,7 +249,7 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
           } else {
             final index = options.indexOf(option);
             final off = index - 1;
-            label = off < 0 ? '前${-off}月 ($option)' : '后$off月 ($option)';
+            label = off < 0 ? '前${-off}月 ($option)' : '后${off + 1}月 ($option)';
           }
         }
         return PopupMenuItem(value: option, height: 40, child: Text(label, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface)));
@@ -565,22 +565,22 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
           Row(
             children: [
               Expanded(
-                child: ElevatedButton(
-                  onPressed: _saveEdit,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                  ),
-                  child: const Text('保存', style: TextStyle(fontSize: 14)),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
                 child: OutlinedButton(
                   onPressed: _cancelEdit,
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
                   child: const Text('取消', style: TextStyle(fontSize: 14)),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: _saveEdit,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  child: const Text('保存', style: TextStyle(fontSize: 14)),
                 ),
               ),
             ],
