@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedTabIndex = 0; // 用于移动端的 Tab 切换
+  int _selectedTabIndex = 0; // 用于移动端的 Tab 切换，0=每日任务，1=阶段任务，默认选中每日任务
 
   @override
   void initState() {
@@ -357,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
             FloatingActionButton(
               onPressed: () {
                 _showAddTodoDialog(
-                  initialTaskType: _selectedTabIndex == 0 ? 'daily' : 'period',
+                  initialTaskType: _selectedTabIndex == 0 ? 'daily' : 'weekly',
                 );
               },
               child: const Icon(Icons.add),
